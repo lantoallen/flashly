@@ -127,6 +127,16 @@ Accounts need a free [Supabase](https://supabase.com) project:
    "Delete my account" button. Without it users can still delete their cloud
    data.
 
+**Keeping a free project awake.** Free Supabase projects are paused after a
+period of inactivity. `vercel.json` schedules a daily Vercel Cron call to
+`/api/keepalive`, which makes one tiny database read so that never happens.
+Set `CRON_SECRET` in Vercel to make the endpoint accept only the cron's calls.
+
+**Email limits.** Supabase's built-in email sender only allows a few emails an
+hour, which real sign-ups quickly exceed. Before launching widely, add a free
+SMTP provider (for example Resend or Brevo) under **Authentication → Emails →
+SMTP Settings**.
+
 Without these variables the account UI explains that accounts are off and the
 app works exactly as before. Sets sync as one JSON row per user, protected by
 row-level security, and merge by last-modified time with deletion tracking so
