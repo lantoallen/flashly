@@ -110,8 +110,15 @@ export default function PrivacyPage() {
           Don’t submit anything confidential.
         </p>
         <p className="mt-3">
-          We don’t store your notes on our server, and we don’t send your whole
-          library to AI providers, only the text for the request you make.
+          If you generate cards from a document (such as a PDF, Word or
+          PowerPoint file), the file is read in your browser and is never
+          uploaded. Only the text you choose to use from it is sent to the AI
+          provider, in the same way as pasted notes.
+        </p>
+        <p className="mt-3">
+          We don’t store your notes or documents on our server, and we don’t
+          send your whole library to AI providers, only the text for the request
+          you make.
         </p>
       </section>
 
@@ -163,8 +170,9 @@ export default function PrivacyPage() {
         <p className="mt-3">
           Flashly is not intended for children under 13, and accounts require
           you to be at least 13. If you enter a birthday that makes you younger
-          than 13, we won’t save it. If you enter a birthday that makes you
-          under 18, direct messages are turned off by default.
+          than 13, we won’t save it. Direct messages are off for every new
+          account until you turn them on, and if you enter a birthday that
+          makes you under 18 we switch them off for you.
         </p>
       </section>
 

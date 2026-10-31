@@ -99,12 +99,15 @@ export default function TermsPage() {
             sets. Content that several members report may be hidden
             automatically. We may remove content or suspend accounts that break
             these rules, but we can’t promise to review everything quickly.
+            Use the in-app Report button for problems with a person or set
+            (reports are private). If someone is in danger, contact your local
+            emergency services first.
           </li>
           <li>
-            <strong>Younger members.</strong> You must be at least 13. If you
-            tell us you are under 18, direct messages are switched off by
-            default. Please talk to a trusted adult if anything online makes you
-            uncomfortable.
+            <strong>Younger members.</strong> You must be at least 13. Direct
+            messages are off for every new account until you turn them on, and
+            if you tell us you are under 18 we suggest keeping them off. Please
+            talk to a trusted adult if anything online makes you uncomfortable.
           </li>
         </ul>
       </section>
@@ -155,7 +158,8 @@ export default function TermsPage() {
           <a href={REPO_URL} target="_blank" rel="noreferrer">
             project page
           </a>
-          .
+          . Issues there are public, so never post personal details or report
+          a person there; use the in-app Report button instead.
         </p>
         <p className="mt-3 text-sm">
           If you run your own copy of Flashly, replace this contact point with
