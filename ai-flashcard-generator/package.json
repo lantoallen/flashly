@@ -10,7 +10,7 @@
     "test:merge": "node --experimental-strip-types --no-warnings scripts/test-merge.mts",
     "test:sql": "node scripts/test-community-sql.mjs",
     "test:ratelimit": "node --experimental-strip-types --no-warnings scripts/test-ratelimit.mts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "npm run test:merge && npm run test:ratelimit && npm run test:sql",
     "test:e2e": "playwright test"
   },
