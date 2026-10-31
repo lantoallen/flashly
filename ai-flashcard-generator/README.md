@@ -171,11 +171,22 @@ two tabs can chat with each other. It is never included in production builds.
 ### Tests
 
 ```bash
-npm run test:sql     # row-level security, blocking, privacy, rate limits
-npm run test:merge   # offline/cloud merge rules
+npm test               # all unit and database tests below
+npm run test:sql       # row-level security, blocking, privacy, rate limits
+npm run test:merge     # offline/cloud merge rules
+npm run test:ratelimit # shared (Redis) and fallback rate limiting
+npm run typecheck
+npm run lint
+
+npm run build && npm run test:e2e   # Playwright browser tests (desktop + mobile)
 ```
 
-`test:sql` runs the real SQL files in an in-process Postgres (PGlite).
+`test:sql` runs the real SQL files in an in-process Postgres (PGlite). The
+browser tests start their own production server on port 4317 and mock the AI,
+so they need no API keys. Run `npx playwright install chromium` once first.
+
+GitHub Actions runs all of the above on every push and pull request
+(`.github/workflows/ci.yml`).
 
 ## Legal text
 

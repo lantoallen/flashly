@@ -1,5 +1,7 @@
 # Flashly
 
+[![CI](https://github.com/lantoallen/flashly/actions/workflows/ci.yml/badge.svg)](https://github.com/lantoallen/flashly/actions/workflows/ci.yml)
+
 AI flashcards and quizzes from your notes, with spaced repetition, a study
 buddy, and an optional community. Free to run.
 
@@ -15,3 +17,5 @@ npm run dev
 
 > When deploying (for example on Vercel), set the **Root Directory** to
 > `ai-flashcard-generator`.
+
+Want to help? See [CONTRIBUTING.md](CONTRIBUTING.md).
