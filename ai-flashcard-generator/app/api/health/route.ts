@@ -7,7 +7,7 @@ export const maxDuration = 20;
  * accept it, and are the configured models available? Never returns a key.
  */
 export async function GET(req: Request) {
-  if (rateLimited(clientIp(req))) {
+  if (await rateLimited(clientIp(req))) {
     return jsonError('Too many requests. Please wait a minute and try again.', 429);
   }
 

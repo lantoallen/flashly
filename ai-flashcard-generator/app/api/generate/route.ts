@@ -33,7 +33,7 @@ const setSchema = z.object({
 
 export async function POST(req: Request) {
   if (!aiConfigured()) return jsonError(NOT_CONFIGURED, 503);
-  if (rateLimited(clientIp(req))) {
+  if (await rateLimited(clientIp(req))) {
     return jsonError('Too many requests. Please wait a minute and try again.', 429);
   }
 

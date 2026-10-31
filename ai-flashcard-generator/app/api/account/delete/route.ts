@@ -7,7 +7,7 @@ import { clientIp, jsonError, rateLimited } from '@/lib/server';
  * The caller proves who they are with their own access token.
  */
 export async function POST(req: Request) {
-  if (rateLimited(clientIp(req))) {
+  if (await rateLimited(clientIp(req))) {
     return jsonError('Too many requests. Please wait a minute and try again.', 429);
   }
 

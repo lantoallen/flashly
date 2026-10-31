@@ -184,8 +184,14 @@ returns a key.
 ## Deploying
 
 Works on any Next.js host. On Vercel's free Hobby plan, add `GROQ_API_KEY` as an
-environment variable. Note that the in-memory rate limiter is per server
-instance.
+environment variable.
+
+**Rate limiting.** Each visitor gets 20 AI requests a minute. Set
+`UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` (from a free
+[Upstash](https://upstash.com) Redis database) so every server instance shares
+the same count. Without them each instance counts on its own, and if Redis is
+unreachable the app falls back to that automatically. IP addresses are hashed
+before they are stored.
 
 ## Privacy
 
