@@ -77,12 +77,14 @@ ok(profiles.find((p) => p.id === ALICE)?.username === 'alice', 'username generat
 ok(profiles.find((p) => p.id === ALICE)?.display_name === 'Alice', 'display name copied from signup');
 ok(/^learner[0-9a-f]{8}$/.test(profiles.find((p) => p.id.endsWith('aa'))?.username ?? ''), 'backfilled legacy account');
 ok(/^[a-z0-9_]{3,20}$/.test(profiles.find((p) => p.id === CARA)?.username), 'short email still gets a valid username');
+const dmDefaults = await q(`select dm_policy from public.profiles where id in ($1, $2, $3)`, [ALICE, BOB, CARA]);
+ok(dmDefaults.every((r) => r.dm_policy === 'nobody'), 'new accounts have direct messages off by default');
 
 await as(ALICE, async () => {
-  await db.query(`update public.profiles set bio='I love biology', interests=array['biology','chemistry','spanish'] where id=$1`, [ALICE]);
+  await db.query(`update public.profiles set bio='I love biology', interests=array['biology','chemistry','spanish'], dm_policy='everyone' where id=$1`, [ALICE]);
 });
 await as(BOB, async () => {
-  await db.query(`update public.profiles set interests=array['biology','history'] where id=$1`, [BOB]);
+  await db.query(`update public.profiles set interests=array['biology','history'], dm_policy='everyone' where id=$1`, [BOB]);
 });
 await as(CARA, async () => {
   await db.query(`update public.profiles set interests=array['music'], dm_policy='nobody' where id=$1`, [CARA]);

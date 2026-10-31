@@ -41,7 +41,8 @@ create table if not exists public.profiles (
   avatar_color text not null default 'violet',
   interests    text[] not null default '{}',
   accent       text,
-  dm_policy    text not null default 'everyone',
+  -- Direct messages are opt-in: new accounts can't be messaged until they choose to.
+  dm_policy    text not null default 'nobody',
   discoverable boolean not null default true,
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now(),
@@ -108,6 +109,9 @@ drop trigger if exists profiles_touch on public.profiles;
 create trigger profiles_touch
   before update on public.profiles
   for each row execute function public.touch_updated_at();
+
+-- Databases created with the old default ('everyone') get the safer default for new accounts.
+alter table public.profiles alter column dm_policy set default 'nobody';
 
 alter table public.profiles enable row level security;
 alter table public.profile_private enable row level security;

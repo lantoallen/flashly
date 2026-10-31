@@ -166,7 +166,7 @@ function makeProfile(db: Db, user: Row) {
   }
   db.tables.profiles.push({
     id: user.id, username, display_name: String(user.meta?.display_name ?? '').slice(0, 40), bio: '',
-    avatar: null, avatar_color: 'violet', interests: [], accent: null, dm_policy: 'everyone',
+    avatar: null, avatar_color: 'violet', interests: [], accent: null, dm_policy: 'nobody',
     discoverable: true, created_at: now(), updated_at: now(),
   });
 }
@@ -486,7 +486,7 @@ class Query implements PromiseLike<{ data: any; error: any; count?: number | nul
           if (existing) throw new DbError('duplicate key value violates unique constraint', '23505');
           Object.assign(row, {
             display_name: '', bio: '', avatar: null, avatar_color: 'violet', interests: [], accent: null,
-            dm_policy: 'everyone', discoverable: true, created_at: now(), updated_at: now(), ...row,
+            dm_policy: 'nobody', discoverable: true, created_at: now(), updated_at: now(), ...row,
           });
           this.validateProfile(db, row, row.id);
           break;

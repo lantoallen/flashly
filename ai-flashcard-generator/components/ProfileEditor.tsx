@@ -390,6 +390,9 @@ export default function ProfileEditor() {
 
         <fieldset className="flex flex-col gap-2">
           <legend className="text-sm font-bold">Who can message you?</legend>
+          <p className="text-xs text-muted">
+            Messages are off until you turn them on. You can block or report anyone at any time.
+          </p>
           <div className="grid max-w-md grid-cols-2 gap-2">
             {(
               [
