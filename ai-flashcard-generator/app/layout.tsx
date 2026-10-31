@@ -6,6 +6,7 @@ import ConsentGate from "@/components/ConsentGate";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Pet from "@/components/Pet";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,12 +25,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Flashly – AI flashcards & quizzes from your notes",
     template: "%s · Flashly",
   },
-  description:
-    "Paste your notes or type a topic and Flashly builds flashcards, quizzes and a match game in seconds. Free, no account needed.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: "Flashly – AI flashcards & quizzes from your notes",
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Flashly – AI flashcards & quizzes from your notes",
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export const viewport: Viewport = {
