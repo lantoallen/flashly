@@ -58,12 +58,13 @@ function NotEnabled() {
 
 function SignInForm() {
   const auth = useAuth();
-  const consent = useConsent();
   const [mode, setMode] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [agreed, setAgreed] = useState(hasAcceptedTerms(consent));
+  // Never pre-ticked: the box also confirms the minimum age, which the
+  // terms dialog doesn't ask about.
+  const [agreed, setAgreed] = useState(false);
   const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -254,11 +255,11 @@ function SignInForm() {
             <button type="button" onClick={() => setMode('signin')} className="font-bold text-primary-ink underline">
               Back to sign in
             </button>
-          ) : (
+          ) : mode === 'signin' ? (
             <button type="button" onClick={() => setMode('reset')} className="font-bold text-primary-ink underline">
               Forgot your password?
             </button>
-          )}
+          ) : null}
         </div>
       </form>
 
