@@ -115,7 +115,11 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (isTypingTarget(e.target)) return;
-      const onControl = (e.target as HTMLElement).closest?.('button, a, summary');
+      const target = e.target as HTMLElement;
+      const onControl = target.closest?.('button, a, summary');
+      // After clicking "Got it" or an arrow, focus stays on that button; Space
+      // should still flip the card rather than press the button again.
+      const spaceFlips = !onControl || target.closest?.('[data-space-flips]');
       if (e.key === 'ArrowRight') {
         e.preventDefault();
         setFlipped(false);
@@ -124,7 +128,7 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
         e.preventDefault();
         setFlipped(false);
         setIndex((i) => Math.max(0, i - 1));
-      } else if ((e.key === ' ' || e.key === 'Enter') && !onControl) {
+      } else if ((e.key === ' ' && spaceFlips) || (e.key === 'Enter' && !onControl)) {
         e.preventDefault();
         setFlipped((f) => !f);
       }
@@ -246,17 +250,19 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
                 type="button"
                 onClick={() => go(-1)}
                 disabled={index === 0}
+                data-space-flips
                 className="btn btn-secondary !p-2.5"
                 aria-label="Previous card"
               >
                 <Icon name="left" />
               </button>
-              <button type="button" onClick={flip} className="btn btn-secondary">
+              <button type="button" onClick={flip} className="btn btn-secondary" data-space-flips>
                 Flip
               </button>
               <button
                 type="button"
                 onClick={() => go(1)}
+                data-space-flips
                 className="btn btn-secondary !p-2.5"
                 aria-label="Next card"
               >
@@ -269,6 +275,7 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
             <button
               type="button"
               onClick={() => mark(false)}
+              data-space-flips
               className="btn btn-lg bg-warn-soft text-warn hover:brightness-95"
             >
               Still learning
@@ -276,6 +283,7 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
             <button
               type="button"
               onClick={() => mark(true)}
+              data-space-flips
               className="btn btn-lg bg-success-soft text-success hover:brightness-95"
             >
               <Icon name="check" />

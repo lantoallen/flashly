@@ -20,6 +20,19 @@ test('the demo set opens and flashcards flip and track progress', async ({ page 
   expect(known).toBe(1);
 });
 
+test('Space flips the card after "Got it" instead of pressing it again', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Try a demo set' }).first().click();
+
+  await page.getByRole('button', { name: 'Got it' }).click();
+  await page.keyboard.press('Space');
+  await expect(page.locator('.flip-card').first()).toHaveAttribute('data-flipped', 'true');
+  const known = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem('flashly:sets:v1') ?? '[]')[0].cards.filter((c: { known?: boolean }) => c.known).length
+  );
+  expect(known).toBe(1);
+});
+
 test('a quiz can be answered from start to results', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Try a demo set' }).first().click();
