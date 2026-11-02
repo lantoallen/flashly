@@ -67,8 +67,19 @@ export function hasAcceptedTerms(consent: Consent = read()): boolean {
   return consent.terms?.version === TERMS_VERSION;
 }
 
+// What the visitor was doing when the dialog opened, resumed once they accept.
+let pending: (() => void) | null = null;
+
 export function acceptTerms(): void {
   write({ ...read(), terms: { version: TERMS_VERSION, at: Date.now() } });
+  const resume = pending;
+  pending = null;
+  resume?.();
+}
+
+/** The dialog was closed without accepting: forget the waiting action. */
+export function cancelTermsRequest(): void {
+  pending = null;
 }
 
 export function setStorageChoice(choice: 'accepted' | 'dismissed'): void {
@@ -82,10 +93,12 @@ export function requestTerms(): void {
 
 /**
  * Call before an action that sends the visitor's text to an AI provider or
- * creates an account. Returns false (and shows the dialog) until they accept.
+ * creates an account. Returns false (and shows the dialog) until they accept;
+ * `resume` then runs as soon as they do, so they don't have to click again.
  */
-export function ensureTerms(): boolean {
+export function ensureTerms(resume?: () => void): boolean {
   if (hasAcceptedTerms()) return true;
+  pending = resume ?? null;
   requestTerms();
   return false;
 }

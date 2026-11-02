@@ -114,7 +114,7 @@ export default function CreateForm() {
     }
 
     // The text is about to be sent to an AI provider: make sure terms are accepted.
-    if (!ensureTerms()) return;
+    if (!ensureTerms(() => submit(e))) return;
 
     setLoading(true);
     petReact('think');

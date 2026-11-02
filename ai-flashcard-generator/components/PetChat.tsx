@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from './icons';
+import { ensureTerms } from '@/lib/consent';
 import { appendChat, clearPetChat, usePetChat } from '@/lib/petchat';
 import { uid } from '@/lib/utils';
 
@@ -47,6 +48,8 @@ export default function PetChat({ name, context }: { name: string; context: PetC
   async function send(content: string) {
     const body = content.trim();
     if (!body || busy) return;
+    // Messages go to an AI provider, like card generation.
+    if (!ensureTerms(() => send(content))) return;
     setError('');
     setText('');
     appendChat({ id: uid(), role: 'user', content: body });

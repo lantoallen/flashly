@@ -64,7 +64,7 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
 
   async function explain() {
     if (!card || explains[card.id]?.status === 'loading') return;
-    if (!ensureTerms()) return;
+    if (!ensureTerms(explain)) return;
     const id = card.id;
     setExplains((m) => ({ ...m, [id]: { status: 'loading', text: '' } }));
     try {

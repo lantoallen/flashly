@@ -29,3 +29,31 @@ test('legal pages are readable without the dialog in the way', async ({ page }) 
     await expect(page.getByRole('dialog', { name: 'Terms and Conditions' })).toBeHidden();
   }
 });
+
+test('an action that needed the terms carries on once they are accepted', async ({ page }) => {
+  await page.route('**/api/generate', (route) =>
+    route.fulfill({
+      json: {
+        title: 'Planets',
+        cards: Array.from({ length: 3 }, (_, i) => ({
+          term: `Planet ${i + 1}`,
+          definition: `Fact about planet ${i + 1}`,
+          distractors: ['A', 'B', 'C'],
+        })),
+      },
+    })
+  );
+
+  await page.goto('/create');
+  const dialog = page.getByRole('dialog', { name: 'Terms and Conditions' });
+  await dialog.getByRole('button', { name: 'Close' }).click();
+  await page.getByRole('region', { name: 'Storage notice' }).getByRole('button', { name: 'Accept' }).click();
+
+  await page.getByRole('tab', { name: 'Enter a topic' }).click();
+  await page.locator('#topic').fill('Planets');
+  await page.locator('#count').fill('3');
+  await page.getByRole('button', { name: /Generate 3/ }).click();
+
+  await dialog.getByRole('button', { name: 'Accept and continue' }).click();
+  await expect(page).toHaveURL(/\/study\//);
+});

@@ -140,7 +140,7 @@ export default function CardsEditor({ set }: { set: StudySet }) {
   const more = Number.isFinite(moreRaw) ? Math.min(25, Math.max(1, moreRaw)) : 5;
 
   async function generateMore() {
-    if (!ensureTerms()) return;
+    if (!ensureTerms(generateMore)) return;
     setBusy(true);
     setMessage(null);
     petReact('think');

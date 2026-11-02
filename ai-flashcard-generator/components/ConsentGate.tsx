@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from './icons';
 import {
   acceptTerms,
+  cancelTermsRequest,
   hasAcceptedTerms,
   onTermsRequested,
   setStorageChoice,
@@ -43,6 +44,7 @@ export default function ConsentGate() {
     acceptRef.current?.focus();
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') {
+        cancelTermsRequest();
         setClosed(true);
         setForced(false);
       }
@@ -52,6 +54,7 @@ export default function ConsentGate() {
   }, [showTerms]);
 
   function close() {
+    cancelTermsRequest();
     setClosed(true);
     setForced(false);
   }
