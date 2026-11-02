@@ -89,7 +89,10 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>Blocks and reports:</strong> who you blocked, and reports
-            you file, so they can be reviewed.
+            you file, so they can be reviewed. When you file a report, its
+            details (what was reported, your reason, the usernames involved and,
+            for a message, its text) are emailed to the site’s moderator through
+            an email delivery service so it can be looked at quickly.
           </li>
         </ul>
         <p className="mt-3">
