@@ -11,7 +11,6 @@ import { shuffle } from '@/lib/utils';
 import {
   filterCards,
   isTypingTarget,
-  ProgressBar,
   SourcePicker,
   type ModeProps,
   type SourceFilter,
@@ -143,44 +142,6 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="panel flex flex-wrap items-end gap-4 p-4">
-        <div className="min-w-[14rem] flex-1">
-          <SourcePicker
-            cards={cards}
-            value={filter}
-            onChange={(f) => restart(f)}
-          />
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={doShuffle} className="btn btn-secondary">
-            <Icon name="shuffle" size={16} />
-            Shuffle
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setDefinitionFirst((d) => !d);
-              setFlipped(false);
-            }}
-            className="btn btn-secondary"
-            aria-pressed={definitionFirst}
-          >
-            <Icon name="refresh" size={16} />
-            {definitionFirst ? 'Definition first' : 'Term first'}
-          </button>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 text-sm text-muted">
-        <span className="shrink-0 tabular-nums">
-          {done ? deck.length : index + 1} / {deck.length}
-        </span>
-        <ProgressBar value={knownCount} max={cards.length} />
-        <span className="shrink-0 tabular-nums">
-          {knownCount}/{cards.length} known
-        </span>
-      </div>
-
       {card ? (
         <>
           <div className="flip-scene h-60 sm:h-64">
@@ -246,6 +207,9 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
               </button>
             </div>
             <div className="flex items-center gap-2">
+              <span className="mr-1 text-sm font-semibold tabular-nums text-muted" aria-live="polite">
+                {index + 1} / {deck.length}
+              </span>
               <button
                 type="button"
                 onClick={() => go(-1)}
@@ -304,9 +268,6 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
               <p className="whitespace-pre-line">{explains[card.id].text}</p>
             </div>
           )}
-          <p className="hidden text-center text-xs text-muted sm:block">
-            Shortcuts: <kbd>Space</kbd> flip · <kbd>←</kbd> <kbd>→</kbd> navigate
-          </p>
         </>
       ) : (
         <div className="panel flex flex-col items-center gap-4 px-6 py-14 text-center">
@@ -319,7 +280,7 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
           </h2>
           <p className="text-muted">
             {deck.length === 0
-              ? 'Star some cards or switch the filter above.'
+              ? 'Star some cards or switch the filter below.'
               : `${knownCount} of ${cards.length} cards marked as known.`}
           </p>
           <div className="flex flex-wrap justify-center gap-3">
@@ -353,6 +314,40 @@ export default function Flashcards({ setId, title, cards, goTo }: ModeProps) {
             )}
           </div>
         </div>
+      )}
+
+      <div className="flex flex-wrap items-end gap-2">
+        <div className="min-w-[14rem] flex-1">
+          <SourcePicker
+            cards={cards}
+            value={filter}
+            onChange={(f) => restart(f)}
+          />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={doShuffle} className="btn btn-secondary">
+            <Icon name="shuffle" size={16} />
+            Shuffle
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setDefinitionFirst((d) => !d);
+              setFlipped(false);
+            }}
+            className="btn btn-secondary"
+            aria-pressed={definitionFirst}
+          >
+            <Icon name="refresh" size={16} />
+            {definitionFirst ? 'Definition first' : 'Term first'}
+          </button>
+        </div>
+      </div>
+
+      {card && (
+        <p className="hidden text-center text-xs text-muted sm:block">
+          Shortcuts: <kbd>Space</kbd> flip · <kbd>←</kbd> <kbd>→</kbd> navigate
+        </p>
       )}
     </div>
   );

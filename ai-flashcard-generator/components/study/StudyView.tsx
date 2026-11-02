@@ -18,7 +18,7 @@ import Match from './Match';
 import Quiz from './Quiz';
 import Review from './Review';
 import Test from './Test';
-import { ProgressBar, type Tab } from './shared';
+import { type Tab } from './shared';
 import Write from './Write';
 
 const TABS: { id: Tab; label: string; icon: IconName }[] = [
@@ -125,7 +125,7 @@ export default function StudyView() {
 
   return (
     <>
-    <div className="no-print mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
+    <div className="no-print mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
       <Link
         href="/library"
         className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-fg"
@@ -142,6 +142,11 @@ export default function StudyView() {
           {set.description && <p className="mt-1 text-muted">{set.description}</p>}
           <div className="mt-3 flex flex-wrap gap-2">
             <span className="chip">{cards.length} cards</span>
+            {cards.length > 0 && (
+              <span className={`chip tabular-nums ${known === cards.length ? '!bg-success-soft !text-success' : ''}`}>
+                {known}/{cards.length} known
+              </span>
+            )}
             <span className="chip">{SOURCE_LABEL[set.source]}</span>
             {set.bestQuiz !== undefined && (
               <span className="chip">Best quiz {set.bestQuiz}%</span>
@@ -248,14 +253,6 @@ export default function StudyView() {
         </p>
       )}
 
-      {cards.length > 0 && (
-        <div className="mt-6 flex items-center gap-3 text-sm text-muted">
-          <ProgressBar value={known} max={cards.length} />
-          <span className="shrink-0 tabular-nums">
-            {known}/{cards.length} mastered
-          </span>
-        </div>
-      )}
 
       <div
         role="tablist"

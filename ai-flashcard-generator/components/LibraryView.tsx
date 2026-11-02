@@ -231,7 +231,7 @@ export default function LibraryView() {
                 </div>
                 <div>
                   <div className="mb-1 flex justify-between text-xs text-muted">
-                    <span>{known} of {total} mastered</span>
+                    <span>{known} of {total} known</span>
                     <span>{formatDate(s.updatedAt)}</span>
                   </div>
                   <div
