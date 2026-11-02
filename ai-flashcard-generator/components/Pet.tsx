@@ -35,6 +35,21 @@ export default function Pet() {
   const draftRef = useRef('');
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  // On phones the buddy slides out of the way while you scroll down, so it
+  // doesn't sit on top of buttons, and comes back when you scroll up.
+  const [tucked, setTucked] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    function onScroll() {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY) < 8) return;
+      setTucked(y > lastY && y > 80);
+      lastY = y;
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     const off = onPetReact((r) => {
@@ -120,7 +135,11 @@ export default function Pet() {
   return (
     <div
       ref={rootRef}
-      className="no-print fixed bottom-3 right-3 z-40 flex flex-col items-end gap-2 sm:bottom-4 sm:right-4"
+      className={`no-print fixed bottom-3 right-3 z-40 flex flex-col items-end gap-2 transition duration-300 motion-reduce:transition-none sm:bottom-4 sm:right-4 ${
+        tucked && !open
+          ? 'max-sm:pointer-events-none max-sm:translate-y-[150%] max-sm:opacity-0 max-sm:focus-within:pointer-events-auto max-sm:focus-within:translate-y-0 max-sm:focus-within:opacity-100'
+          : ''
+      }`}
     >
       {/* speech bubble for reactions */}
       {bubble && !open && (
@@ -271,9 +290,8 @@ export default function Pet() {
         aria-label={`${pet.name}, level ${lvl.level} study buddy. Open menu`}
         className="relative rounded-full transition-transform hover:scale-105 focus-visible:outline-offset-4"
       >
-        <span className="block origin-bottom-right max-sm:scale-[0.72]">
-          <PetFigure mood={mood} level={lvl.level} size={76} />
-        </span>
+        {/* A real smaller size on phones (not a scale), so the tap area matches what you see. */}
+        <PetFigure mood={mood} level={lvl.level} size={76} className="block max-sm:h-14 max-sm:w-14" />
         <span className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full border-2 border-ink bg-sun px-1 text-[11px] font-extrabold text-[#1b1033]">
           {lvl.level}
         </span>
