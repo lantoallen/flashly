@@ -7,6 +7,7 @@ import {
   jsonError,
   NOT_CONFIGURED,
   rateLimited,
+  UnusableOutput,
   withFallback,
 } from '@/lib/server';
 
@@ -92,7 +93,7 @@ ${facts ? `Context: ${facts}` : ''}`;
         providerOptions: AI_OPTIONS,
       });
       const reply = text.trim();
-      if (!reply) throw new Error('Empty reply');
+      if (!reply) throw new UnusableOutput('Empty reply');
       return reply;
     });
     return Response.json({ reply: value });

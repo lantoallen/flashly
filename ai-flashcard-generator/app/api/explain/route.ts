@@ -7,6 +7,7 @@ import {
   jsonError,
   NOT_CONFIGURED,
   rateLimited,
+  UnusableOutput,
   withFallback,
 } from '@/lib/server';
 
@@ -49,7 +50,7 @@ Explain it in plain language in 2-3 short sentences, then give one concrete exam
     const { value } = await withFallback(async (model) => {
       const { text } = await generateText({ model, prompt, providerOptions: AI_OPTIONS });
       const explanation = text.trim();
-      if (!explanation) throw new Error('Empty explanation');
+      if (!explanation) throw new UnusableOutput('Empty explanation');
       return explanation;
     });
     return Response.json({ explanation: value });

@@ -81,7 +81,7 @@ Open <http://localhost:3000>.
 
 | Piece | Where |
 | --- | --- |
-| AI providers, failover, rate limit | `lib/server.ts` |
+| AI providers, failover, rate limit | `lib/server.ts`, `lib/failover.ts`, `lib/ratelimit.ts` |
 | Generation, explain, health, account-delete endpoints | `app/api/*/route.ts` |
 | Accounts, sync and merge | `components/AuthProvider.tsx`, `lib/cloud.ts`, `lib/merge.ts`, `supabase/schema.sql` |
 | Consent (terms + storage notice) | `lib/consent.ts`, `components/ConsentGate.tsx`, `app/terms`, `app/privacy` |
@@ -105,6 +105,10 @@ tried in this order, and a failure moves on to the next automatically:
 | Cerebras | `CEREBRAS_API_KEY` | `gpt-oss-120b`, `llama3.1-8b` |
 | Google Gemini | `GEMINI_API_KEY` | `gemini-2.5-flash`, `gemini-2.5-flash-lite` |
 | OpenRouter | `OPENROUTER_API_KEY` | `openai/gpt-oss-20b:free`, `meta-llama/llama-3.3-70b-instruct:free` |
+
+If a model answers with something unusable (malformed JSON, too few cards,
+an empty reply), it is asked once more before moving on, since that is
+usually a one-off. The rules live in `lib/failover.ts`.
 
 Override the order with `AI_PROVIDER_ORDER=gemini,groq` or a provider's models
 with e.g. `GROQ_MODELS=model-a,model-b`. Providers retire models from time to
@@ -174,6 +178,8 @@ two tabs can chat with each other. It is never included in production builds.
 npm test               # all unit and database tests below
 npm run test:sql       # row-level security, blocking, privacy, rate limits
 npm run test:merge     # offline/cloud merge rules
+npm run test:quiz      # quiz options that don't give the answer away
+npm run test:failover  # AI retries and provider failover
 npm run test:ratelimit # shared (Redis) and fallback rate limiting
 npm run typecheck
 npm run lint

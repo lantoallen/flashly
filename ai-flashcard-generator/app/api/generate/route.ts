@@ -8,6 +8,7 @@ import {
   jsonError,
   NOT_CONFIGURED,
   rateLimited,
+  UnusableOutput,
   withFallback,
 } from '@/lib/server';
 
@@ -122,7 +123,7 @@ export async function POST(req: Request) {
           return true;
         });
 
-      if (cards.length < minimum) throw new Error('Too few valid cards');
+      if (cards.length < minimum) throw new UnusableOutput('Too few valid cards');
       return { title: object.title.trim(), cards };
     });
 

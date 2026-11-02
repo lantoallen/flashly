@@ -2,6 +2,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import type { LanguageModel } from 'ai';
+import { AllProvidersFailed, runInTurn } from './failover';
 
 /** Helpers shared by the API routes (server only). */
 
@@ -10,6 +11,7 @@ import type { LanguageModel } from 'ai';
 // ---------------------------------------------------------------------------
 
 export { rateLimited } from './ratelimit';
+export { UnusableOutput } from './failover';
 
 export function clientIp(req: Request): string {
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local';
@@ -147,79 +149,21 @@ export function aiConfigured(): boolean {
 export const NOT_CONFIGURED =
   'The AI service is not set up on this server yet (no API key is configured).';
 
-// ---- Failover with a small circuit breaker ----------------------------------
-
-type Failure = { provider: string; model: string; status?: number; retryAfter?: number };
-
-/** `provider:model` -> time until which we skip it. */
-const cooldown = new Map<string, number>();
-
-type AiErrorShape = {
-  statusCode?: number;
-  responseHeaders?: Record<string, string>;
-  lastError?: AiErrorShape;
-  cause?: AiErrorShape;
-};
-
-/** HTTP status and a "retry after N seconds" hint from a failed AI call. */
-export function aiErrorInfo(err: unknown): { status?: number; retryAfter?: number } {
-  let e = err as AiErrorShape | null | undefined;
-  for (let depth = 0; e && e.statusCode === undefined && depth < 3; depth++) {
-    e = e.lastError ?? e.cause;
-  }
-  const h = e?.responseHeaders ?? {};
-
-  let retryAfter: number | undefined;
-  if (h['retry-after'] && Number.isFinite(Number(h['retry-after']))) {
-    retryAfter = Number(h['retry-after']);
-  } else if (h['x-ratelimit-reset-tokens']) {
-    // Looks like "5.5s" or "1m26.4s".
-    const m = /(?:(\d+)m)?([\d.]+)s/.exec(h['x-ratelimit-reset-tokens']);
-    if (m) retryAfter = Number(m[1] ?? 0) * 60 + Number(m[2]);
-  }
-  return { status: e?.statusCode, retryAfter: retryAfter === undefined ? undefined : Math.ceil(retryAfter) };
-}
-
-export class AllProvidersFailed extends Error {
-  failures: Failure[];
-  constructor(failures: Failure[]) {
-    super('All AI providers failed');
-    this.failures = failures;
-  }
-}
+// ---- Failover -----------------------------------------------------------------
 
 /**
- * Run `fn` against each configured provider/model until one succeeds.
- * Providers that just failed are skipped for a short while, so a dead
- * provider doesn't slow every request down.
+ * Run `fn` against each configured provider/model until one succeeds
+ * (see lib/failover.ts for the retry and cooldown rules).
  */
-export async function withFallback<T>(
+export function withFallback<T>(
   fn: (model: LanguageModel) => Promise<T>
 ): Promise<{ value: T; provider: string; model: string }> {
-  const all = configuredProviders().flatMap((p) =>
-    modelsFor(p).map((model) => ({ p, model, key: keyFor(p), tag: `${p.id}:${model}` }))
+  return runInTurn(
+    configuredProviders().flatMap((p) =>
+      modelsFor(p).map((model) => ({ provider: p.id, model, make: () => p.make(keyFor(p), model) }))
+    ),
+    fn
   );
-  if (all.length === 0) throw new AllProvidersFailed([]);
-
-  const now = Date.now();
-  const ready = all.filter((c) => (cooldown.get(c.tag) ?? 0) <= now);
-  const candidates = ready.length ? ready : all; // everything cooling down: try anyway
-
-  const failures: Failure[] = [];
-  for (const c of candidates) {
-    try {
-      const value = await fn(c.p.make(c.key, c.model));
-      cooldown.delete(c.tag);
-      return { value, provider: c.p.id, model: c.model };
-    } catch (err) {
-      const { status, retryAfter } = aiErrorInfo(err);
-      failures.push({ provider: c.p.id, model: c.model, status, retryAfter });
-      const seconds = status === 401 || status === 403 ? 600 : status === 429 ? (retryAfter ?? 30) : 45;
-      cooldown.set(c.tag, Date.now() + seconds * 1000);
-      console.error(`AI call failed (${c.tag}, status ${status ?? 'n/a'}):`, err);
-    }
-  }
-  throw new AllProvidersFailed(failures);
 }
 
 /** Standard JSON response for a failed AI call, without leaking internals. */
