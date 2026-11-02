@@ -10,10 +10,11 @@
     "test:merge": "node --experimental-strip-types --no-warnings scripts/test-merge.mts",
     "test:quiz": "node --experimental-strip-types --no-warnings scripts/test-quiz.mts",
     "test:failover": "node --experimental-strip-types --no-warnings scripts/test-failover.mts",
+    "test:alerts": "node --experimental-strip-types --no-warnings scripts/test-report-alerts.mts",
     "test:sql": "node scripts/test-community-sql.mjs",
     "test:ratelimit": "node --experimental-strip-types --no-warnings scripts/test-ratelimit.mts",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "npm run test:merge && npm run test:quiz && npm run test:failover && npm run test:ratelimit && npm run test:sql",
+    "test": "npm run test:merge && npm run test:quiz && npm run test:failover && npm run test:alerts && npm run test:ratelimit && npm run test:sql",
     "test:e2e": "playwright test"
   },
   "dependencies": {

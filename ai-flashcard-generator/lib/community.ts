@@ -419,6 +419,8 @@ export async function report(
     .insert({ reporter_id: reporterId, kind, target_id: targetId, reason: reason.slice(0, 500) });
   // Reporting the same thing twice is fine from the reporter's point of view.
   if (error && error.code !== '23505') fail(error, 'Could not send your report.');
+  // Let the site owner know straight away (the daily cron catches any misses).
+  if (!error) void fetch('/api/report-alert', { method: 'POST' }).catch(() => {});
 }
 
 export async function blockUser(sb: SupabaseClient, blockerId: string, blockedId: string): Promise<void> {

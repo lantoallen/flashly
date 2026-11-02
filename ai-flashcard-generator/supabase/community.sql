@@ -244,7 +244,17 @@ create table if not exists public.reports (
   constraint reports_once unique (reporter_id, kind, target_id)
 );
 
+-- When the site owner was emailed about this report (set by the server with
+-- the service key, see /api/report-alert; members can't see or set it).
+alter table public.reports add column if not exists alerted_at timestamptz;
+create index if not exists reports_unalerted_idx on public.reports (created_at)
+  where alerted_at is null;
+
 alter table public.reports enable row level security;
+
+-- Members can file a report, nothing more.
+revoke insert, update on public.reports from anon, authenticated;
+grant insert (reporter_id, kind, target_id, reason) on public.reports to authenticated;
 
 drop policy if exists "Users can file reports" on public.reports;
 -- There is deliberately no select policy: reports are for moderators, who read

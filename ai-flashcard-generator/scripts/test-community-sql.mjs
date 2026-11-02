@@ -161,7 +161,14 @@ await as(BOB, async () => {
   await rejects(db.query(`insert into public.reports (reporter_id, kind, target_id) values ($1,'post',$2)`, [BOB, publicPost.id]), 'one report per person per target', 'duplicate');
   const rows = await q(`select * from public.reports`).catch((e) => e);
   ok(rows instanceof Error || rows.length === 0, 'reports cannot be read back by users');
+  await rejects(
+    db.query(`insert into public.reports (reporter_id, kind, target_id, alerted_at) values ($1,'user',$2,now())`, [BOB, ALICE]),
+    'members cannot mark their report as already alerted',
+    'permission denied'
+  );
 });
+const pending = await q(`select count(*)::int as n from public.reports where alerted_at is null`);
+ok(pending[0].n === 1, 'new reports wait for the owner alert');
 await as('44444444-4444-4444-4444-444444444444', async () => {
   await db.query(`insert into public.reports (reporter_id, kind, target_id) values ($1,'post',$2)`, ['44444444-4444-4444-4444-444444444444', publicPost.id]);
 });

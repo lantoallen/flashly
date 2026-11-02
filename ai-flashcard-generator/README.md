@@ -154,10 +154,17 @@ The community uses the same Supabase project as accounts. After running
 - Profiles are created automatically for new accounts (and backfilled for
   existing ones). Pictures are resized in the browser to a small square and
   stored with the profile, so no file storage is needed.
-- Moderation: members can report sets and people. Reports land in the
-  `reports` table (Supabase **Table Editor**). A set reported by three
+- Moderation: members can report sets, people and messages. Reports land in
+  the `reports` table (Supabase **Table Editor**). A set reported by three
   different members is hidden automatically. To remove a person or a set,
   delete the row in the dashboard.
+- Report alerts: set `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY` (free at
+  [resend.com](https://resend.com)) and `REPORT_ALERT_EMAIL`, and you get an
+  email as soon as someone files a report, listing what was reported, the
+  reason and links to it. Each report is emailed once; any that couldn't be
+  sent go out with the daily cron. Resend's shared sender can only email the
+  address you signed up with, so use that (or verify a domain and set
+  `REPORT_ALERT_FROM`).
 - Realtime message delivery uses Supabase Realtime (enabled by the SQL). The
   app also polls every few seconds, so chat works even without it.
 
@@ -180,6 +187,7 @@ npm run test:sql       # row-level security, blocking, privacy, rate limits
 npm run test:merge     # offline/cloud merge rules
 npm run test:quiz      # quiz options that don't give the answer away
 npm run test:failover  # AI retries and provider failover
+npm run test:alerts    # report alert emails
 npm run test:ratelimit # shared (Redis) and fallback rate limiting
 npm run typecheck
 npm run lint
