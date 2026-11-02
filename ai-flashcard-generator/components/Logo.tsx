@@ -31,11 +31,18 @@ export function LogoMark({ size = 40 }: { size?: number }) {
   );
 }
 
-export function Logo({ size = 40 }: { size?: number }) {
+export function Logo({
+  size = 40,
+  wordmarkClassName = '',
+}: {
+  size?: number;
+  /** Extra classes for the "Flashly" text, e.g. to hide it on narrow screens. */
+  wordmarkClassName?: string;
+}) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <LogoMark size={size} />
-      <span className="font-display text-2xl font-extrabold tracking-tight">
+      <span className={`font-display text-2xl font-extrabold tracking-tight ${wordmarkClassName}`}>
         Flash<span className="brand-text">ly</span>
       </span>
     </span>

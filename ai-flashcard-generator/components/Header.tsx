@@ -57,7 +57,8 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b-2 border-ink bg-bg/90 backdrop-blur">
       <div className="mx-auto flex h-[4.5rem] w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <Link href="/" aria-label="Flashly home" className="shrink-0">
-          <Logo />
+          {/* On narrow phones the icon alone leaves room for the buttons. */}
+          <Logo wordmarkClassName="hidden min-[440px]:inline" />
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1.5 md:flex">
@@ -123,7 +124,7 @@ export default function Header() {
                 />
               </Link>
             ) : (
-              <Link href="/account" className="btn btn-secondary !py-2" aria-label="Sign in">
+              <Link href="/account" className="btn btn-secondary shrink-0 whitespace-nowrap !px-3.5 !py-2">
                 Sign in
               </Link>
             )
