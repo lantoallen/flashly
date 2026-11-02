@@ -24,9 +24,9 @@ const TABS: { id: Tab; label: string; icon: 'edit' | 'search' | 'upload' | 'plus
 ];
 
 const LEVELS: { id: Level; label: string }[] = [
-  { id: 'beginner', label: 'Beginner' },
-  { id: 'intermediate', label: 'Intermediate' },
-  { id: 'advanced', label: 'Advanced' },
+  { id: 'beginner', label: 'Easy' },
+  { id: 'intermediate', label: 'Medium' },
+  { id: 'advanced', label: 'Hard' },
 ];
 
 const IDEAS = [
@@ -532,7 +532,7 @@ export default function CreateForm() {
                   role="radio"
                   aria-checked={level === l.id}
                   onClick={() => setLevel(l.id)}
-                  className={`rounded-lg px-0.5 py-2 text-[11px] font-bold transition-colors min-[360px]:text-xs sm:px-2 sm:text-sm ${
+                  className={`rounded-lg px-2 py-2 text-sm font-bold whitespace-nowrap transition-colors ${
                     level === l.id ? 'bg-ink text-bg' : 'text-muted hover:text-fg'
                   }`}
                 >
