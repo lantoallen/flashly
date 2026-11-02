@@ -77,8 +77,8 @@ export async function POST(req: Request) {
   }
 
   const rules = `Create exactly ${count} study flashcards at a ${level} level.
-- "term": a short concept, name or question (max 8 words).
-- "definition": a clear, self-contained answer (max 30 words).
+- "term": the name of one key concept, person, event, formula or word (max 8 words), as it would appear on the front of a flashcard. Use the real name ("Sinoatrial node"), not a description of it ("Heart's pacemaker region").
+- "definition": a clear, self-contained explanation of the term (max 30 words) that does not contain the term itself, so it can be used to guess the term.
 - "wrongAnswers": exactly 3 plausible but incorrect definitions in the same style and length as the real one, used as quiz distractors. They must clearly be wrong.
 - "title": a short title for the set (max 6 words).
 - Do not repeat terms. Write in the language of the source material.${
