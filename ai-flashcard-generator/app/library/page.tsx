@@ -24,8 +24,9 @@ export default function LibraryPage() {
           New set
         </Link>
       </div>
-      <Dashboard />
+      {/* Sets first: that's what people come here for. Progress follows. */}
       <LibraryView />
+      <Dashboard />
     </div>
   );
 }

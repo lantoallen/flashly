@@ -20,7 +20,8 @@ export default function Dashboard() {
   const sets = useSets();
   const goal = useGoal();
 
-  if (!hydrated) return null;
+  // Nothing to show before the first set exists.
+  if (!hydrated || sets.length === 0) return null;
 
   const now = nowMs();
   const week = lastDays(days, 7, now);
@@ -38,7 +39,10 @@ export default function Dashboard() {
   const C = 2 * Math.PI * R;
 
   return (
-    <section aria-label="Your progress" className="mb-8 grid gap-4 md:grid-cols-[1.2fr_1fr_1fr]">
+    <section aria-labelledby="progress-title" className="mt-12 grid gap-4 md:grid-cols-[1.2fr_1fr_1fr]">
+      <h2 id="progress-title" className="font-display text-2xl font-extrabold md:col-span-3">
+        Your progress
+      </h2>
       {/* Daily goal */}
       <div className="panel flex items-center gap-5 bg-sun-soft p-5">
         <div className="relative h-20 w-20 shrink-0">
@@ -111,7 +115,7 @@ export default function Dashboard() {
       {/* Mastery + due */}
       <div className="panel grid grid-cols-2 gap-3 bg-mint-soft p-5">
         <div>
-          <p className="text-xs font-extrabold uppercase tracking-wider text-muted">Mastered</p>
+          <p className="text-xs font-extrabold uppercase tracking-wider text-muted">Known</p>
           <p className="font-display text-3xl font-extrabold">{mastered}</p>
           <p className="text-sm font-semibold text-muted">of {cards.length} cards</p>
         </div>
