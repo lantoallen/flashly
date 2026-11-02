@@ -39,6 +39,12 @@ npm run build && npm run test:e2e   # first time: npx playwright install chromiu
 - More browser tests in `e2e/` for flows that aren't covered yet.
 - Improving the wording or translations of the interface.
 
+## Dependency updates
+
+Dependabot opens pull requests every Monday for npm packages and GitHub
+Actions (minor and patch updates arrive grouped in one). Merge them once CI
+is green; for a major version, skim its changelog first.
+
 ## Reporting problems
 
 Open an issue with steps to reproduce, what you expected, and what happened.
