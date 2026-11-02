@@ -33,6 +33,21 @@ test('Space flips the card after "Got it" instead of pressing it again', async (
   expect(known).toBe(1);
 });
 
+test('Write mode keeps the cursor in the answer box from card to card', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Try a demo set' }).first().click();
+  await page.getByRole('tab', { name: /Write/ }).click();
+  await page.getByRole('button', { name: /Start writing/ }).click();
+
+  const box = page.locator('#typed');
+  await expect(box).toBeFocused();
+  await page.keyboard.type('not the answer');
+  await page.keyboard.press('Enter'); // check
+  await page.keyboard.press('Enter'); // next card
+  await expect(box).toBeFocused();
+  await expect(box).toHaveValue('');
+});
+
 test('a quiz can be answered from start to results', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Try a demo set' }).first().click();

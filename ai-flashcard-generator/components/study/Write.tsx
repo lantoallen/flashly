@@ -152,6 +152,8 @@ export default function Write({ setId, cards, goTo }: ModeProps) {
           </label>
           {run.side === 'term' ? (
             <textarea
+              // A new element per card, so autoFocus puts the cursor back in the box.
+              key={run.idx}
               id="typed"
               rows={3}
               autoFocus
@@ -169,6 +171,7 @@ export default function Write({ setId, cards, goTo }: ModeProps) {
             />
           ) : (
             <input
+              key={run.idx}
               id="typed"
               autoFocus
               autoComplete="off"
