@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 import { TERMS_VERSION } from '@/lib/terms';
 
 export const REPO_URL = 'https://github.com/lantoallen/flashly';
+/** Private contact for privacy requests and anything not for a public issue. Change it if you run your own copy. */
+export const CONTACT_EMAIL = 'lantoallen07@gmail.com';
 
 export function LegalPage({
   title,

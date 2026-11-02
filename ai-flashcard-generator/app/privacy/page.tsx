@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LegalPage, REPO_URL } from "@/components/LegalPage";
+import { CONTACT_EMAIL, LegalPage } from "@/components/LegalPage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -183,16 +183,11 @@ export default function PrivacyPage() {
         <h2>10. Changes and contact</h2>
         <p className="mt-3">
           If this policy changes, the version date above changes and you may be
-          asked to accept it again. For questions or requests, open an issue on
-          the{' '}
-          <a href={REPO_URL} target="_blank" rel="noreferrer">
-            project page
-          </a>
-          .
-        </p>
-        <p className="mt-3 text-sm">
-          This page describes how this app is built. If you run your own copy,
-          update the contact details and review the policy for your region.
+          asked to accept it again. For questions or privacy requests (for
+          example a copy of your data, a correction, or deleting something you
+          can’t delete yourself), email{' '}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Please don’t
+          send these through public GitHub issues.
         </p>
       </section>
     </LegalPage>

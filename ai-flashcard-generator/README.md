@@ -205,8 +205,9 @@ GitHub Actions runs all of the above on every push and pull request
 ## Legal text
 
 `app/terms` and `app/privacy` describe how this app works in plain language.
-They are a starting point, not legal advice. Review them (and update the
-contact details) before running your own public copy, and bump
+They are a starting point, not legal advice. Review them before running your
+own public copy, change `CONTACT_EMAIL` in `components/LegalPage.tsx` to your
+own address, and bump
 `TERMS_VERSION` in `lib/terms.ts` when you change them so users are asked to
 accept again.
 

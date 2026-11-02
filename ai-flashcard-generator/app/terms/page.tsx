@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LegalPage, REPO_URL } from "@/components/LegalPage";
+import { CONTACT_EMAIL, LegalPage, REPO_URL } from "@/components/LegalPage";
 
 export const metadata: Metadata = {
   title: "Terms and Conditions",
@@ -154,16 +154,16 @@ export default function TermsPage() {
         <p className="mt-3">
           We may update these terms. When we do, the version date above changes
           and you may be asked to accept them again. Questions or concerns?
-          Open an issue on the{' '}
+          Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. To
+          report a person or something they posted, use the in-app Report
+          button.
+        </p>
+        <p className="mt-3">
+          For bugs and ideas you can also open an issue on the{' '}
           <a href={REPO_URL} target="_blank" rel="noreferrer">
             project page
           </a>
-          . Issues there are public, so never post personal details or report
-          a person there; use the in-app Report button instead.
-        </p>
-        <p className="mt-3 text-sm">
-          If you run your own copy of Flashly, replace this contact point with
-          your own and review these terms for your region.
+          . Issues there are public, so never post personal details there.
         </p>
       </section>
     </LegalPage>

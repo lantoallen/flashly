@@ -53,6 +53,5 @@ content inside the app with the Report button instead.
 
 ## Security
 
-If you find a security problem, please don't open a public issue. Use
-GitHub's private vulnerability reporting on this repository (Security tab →
-Report a vulnerability).
+If you find a security problem, please don't open a public issue. Email
+lantoallen07@gmail.com with the details instead.
